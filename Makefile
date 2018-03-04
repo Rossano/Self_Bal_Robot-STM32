@@ -57,6 +57,7 @@ OBJECTS += X_NUCLEO_IKS01A2/Components/LSM303AGRSensor/LSM303AGR_mag_driver.o
 OBJECTS += X_NUCLEO_IKS01A2/Components/LSM6DSLSensor/LSM6DSLSensor.o
 OBJECTS += X_NUCLEO_IKS01A2/Components/LSM6DSLSensor/LSM6DSL_acc_gyro_driver.o
 OBJECTS += X_NUCLEO_IKS01A2/XNucleoIKS01A2.o
+OBJECTS += ExtendedClock.o
 OBJECTS += main.o
 OBJECTS += mbed-rtos/rtos/Mutex.o
 OBJECTS += mbed-rtos/rtos/RtosTimer.o

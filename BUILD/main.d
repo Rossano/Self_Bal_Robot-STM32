@@ -109,8 +109,12 @@ main.o: ../main.cpp ../mbed_config.h ../mbed/./mbed.h \
  ../mbed/./drivers/InterruptIn.h ../mbed/./hal/gpio_irq_api.h \
  ../mbed/./platform/wait_api.h ../mbed/./hal/sleep_api.h \
  ../mbed/./platform/rtc_time.h ../mbed/./platform/Callback.h \
- ../mbed/./platform/FunctionPointer.h \
- ../X_NUCLEO_IKS01A2/XNucleoIKS01A2.h \
+ ../mbed/./platform/FunctionPointer.h ../mbed-rtos/rtos/rtos.h \
+ ../mbed-rtos/rtos/Thread.h ../mbed-rtos/rtx/TARGET_CORTEX_M/cmsis_os.h \
+ ../mbed-rtos/rtos/Semaphore.h ../mbed-rtos/rtos/Mutex.h \
+ ../mbed-rtos/rtos/RtosTimer.h ../mbed-rtos/rtos/Mail.h \
+ ../mbed-rtos/rtos/MemoryPool.h ../mbed-rtos/rtos/Queue.h \
+ ../mbed/./platform/mbed_error.h ../X_NUCLEO_IKS01A2/XNucleoIKS01A2.h \
  ../X_NUCLEO_IKS01A2/x_nucleo_iks01a2_targets.h \
  ../X_NUCLEO_IKS01A2/Components/HTS221Sensor/HTS221Sensor.h \
  ../X_NUCLEO_IKS01A2/X_NUCLEO_COMMON/DevI2C/DevI2C.h ../mbed/hal/pinmap.h \
@@ -129,4 +133,5 @@ main.o: ../main.cpp ../mbed_config.h ../mbed/./mbed.h \
  ../X_NUCLEO_IKS01A2/ST_INTERFACES/Sensors/PressureSensor.h \
  ../X_NUCLEO_IKS01A2/Components/LSM6DSLSensor/LSM6DSLSensor.h \
  ../X_NUCLEO_IKS01A2/Components/LSM6DSLSensor/LSM6DSL_acc_gyro_driver.h \
- ../X_NUCLEO_IKS01A2/ST_INTERFACES/Sensors/GyroSensor.h
+ ../X_NUCLEO_IKS01A2/ST_INTERFACES/Sensors/GyroSensor.h \
+ ../ExtendedClock.h

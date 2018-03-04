@@ -77,7 +77,11 @@ void init_vector(float * vect, uint8_t dim)
 
 /* Includes */
 #include "mbed.h"
+#include "rtos.h"
 #include "XNucleoIKS01A2.h"
+#include <ExtendedClock.h>
+
+#define TIMER_TICK_ms		100
 
 /* Instantiate the expansion board */
 static XNucleoIKS01A2 *mems_expansion_board = XNucleoIKS01A2::instance(D14, D15, D4, D5);
@@ -88,6 +92,13 @@ static HTS221Sensor *hum_temp = mems_expansion_board->ht_sensor;
 static LPS22HBSensor *press_temp = mems_expansion_board->pt_sensor;
 static LSM6DSLSensor *acc_gyro = mems_expansion_board->acc_gyro;
 static LSM303AGRAccSensor *accelerometer = mems_expansion_board->accelerometer;
+
+void baud(int baudrate)
+{
+	Serial pc(USBTX, USBRX);
+	pc.baud(baudrate);
+}
+
 
 /* Helper function for printing floats & doubles */
 static char *print_double(char* str, double v, int decimalDigits=2)
@@ -125,12 +136,33 @@ static char *print_double(char* str, double v, int decimalDigits=2)
   return str;
 }
 
+/**
+ * Synchronization
+ */
+Semaphore timer(1);
+
+/**
+ * Time synchronization thread
+ */
+void synch_thread(void const *name)
+{
+	while(true)
+	{
+		timer.release();
+		Thread::wait(TIMER_TICK_ms);
+	}
+}
+
 /* Simple main function */
 int main() {
   uint8_t id;
   float value1, value2;
   char buffer1[32], buffer2[32];
   int32_t axes[3];
+  int32_t gyro[3];
+  uint32_t count = 0;
+  uint32_t old_timing = 0;
+  Thread synThd;
 
   /* Enable all sensors */
   hum_temp->enable();
@@ -139,6 +171,11 @@ int main() {
   accelerometer->enable();
   acc_gyro->enable_x();
   acc_gyro->enable_g();
+
+  baud(115200);
+
+  // Start threads
+  synThd.start(callback(synch_thread, (void *)"Synch Thread"));
 
   printf("\r\n--- Starting new run ---\r\n");
 
@@ -153,7 +190,12 @@ int main() {
   acc_gyro->read_id(&id);
   printf("LSM6DSL accelerometer & gyroscope = 0x%X\r\n", id);
 
+  printf("count, AccX, AccY, AccZ, GyroX, GyroY, GyroZ\n");
+
+  // Start the clock
+
   while(1) {
+#if 0
     printf("\r\n");
 
     hum_temp->get_temperature(&value1);
@@ -179,6 +221,14 @@ int main() {
     printf("LSM6DSL [gyro/mdps]:   %6ld, %6ld, %6ld\r\n", axes[0], axes[1], axes[2]);
 
     wait(1.5);
+#endif
+
+    timer.wait();
+    acc_gyro->get_x_axes(axes);
+    acc_gyro->get_g_axes(gyro);
+    uint32_t foo = clock_ms();
+    printf("start,%d,%d,%d,%d,%d,%d,%d,#\r\n", foo - old_timing, axes[0], axes[1], axes[2], gyro[0], gyro[1], gyro[2]);
+    old_timing = foo;
   }
 }
 
